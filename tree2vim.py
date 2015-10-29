@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 #   aeo_parameters
-#   abelo
+#   tree2vim
 #       aeo_inputOutput
 #           aeo_parameters
 #       aeo_commandLine
@@ -11,64 +11,35 @@
 #           aeo_inputOutput
 #       aeo_parameters
 
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                        IMPORT                                                        =
-#=                                                                                                                      =
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#------------------------------------------------------------------------------
+#                                                                        IMPORT
+#------------------------------------------------------------------------------
 import os
 import tarfile
-from itertools                  import chain
+from itertools import chain
 #------------------------------------------------------------------------------------------------------------------------
-from aeo_inputOutput            import setTheEnvironment
-from aeo_inputOutput            import humanRead
-from aeo_commandLine            import setCommandLine
-from aeo_userInterface          import prompt
-from aeo_userInterface          import repeat
-from aeo_parameters             import *
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                       PARAMETER                                                      =
-#=                                                                                                                      =
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-answer                          =       0
-minDepthOfRoots                 =       0
-showHidden                      =       False
-compact                         =       False
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                       FUNCTION                                                       =
-#=                                                                                                                      =
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+from aeo_inputOutput import setTheEnvironment
+from aeo_inputOutput import humanRead
+from aeo_commandLine import setCommandLine
+from aeo_userInterface import prompt
+from aeo_userInterface import repeat
+from aeo_parameters import *
+#------------------------------------------------------------------------------
+#                                                                    PARAMETERS
+#------------------------------------------------------------------------------
+answer = 0
+minDepthOfRoots = 0
+showHidden = False
+compact = False
+#------------------------------------------------------------------------------
+#                                                                     FUNCTIONS
+#------------------------------------------------------------------------------
 def minDepth(roots):
-    m                           =       len(roots[0][0].split("/"))
+    m = len(roots[0][0].split("/"))
     for e in roots:
-        do                      =       len(e[0].split("/"))
+        do = len(e[0].split("/"))
         if (do < m):
-            m                   =       do
+            m = do
             print m
     return m
 
@@ -77,35 +48,25 @@ def fillList(mList,mIp):
     for e in mIp.readlines():
         mList.append(e.rstrip())
     return
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                         CLASS                                                        =
-#=                                                                                                                      =
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#------------------------------------------------------------------------------
+#                                                                       CLASSES
+#------------------------------------------------------------------------------
 class File:
     def __init__(self, path, alias, status, fileType):
-        self.path               =       path
-        self.depth              =       len(path.split("/")) - minDepthOfRoots
-        self.alias              =       alias
-        self.hiddenFile         =       not self.alias.find(".") != 0
-        self.status             =       status
-        self.fileType           =       fileType
-        self.parentPath         =       os.path.dirname(path)
-        self.parentName         =       os.path.basename(self.parentPath)
+        self.path =  path
+        self.depth = len(path.split("/")) - minDepthOfRoots
+        self.alias = alias
+        self.hiddenFile = not self.alias.find(".") != 0
+        self.status = status
+        self.fileType = fileType
+        self.parentPath = os.path.dirname(path)
+        self.parentName = os.path.basename(self.parentPath)
         if (fileType == "directory"):
-            self.isDirectory    =       True
+            self.isDirectory = True
             self.getChildrenAndContent()
         else:
-            self.isDirectory    =       False
-        self.color              =       color[self.fileType]
+            self.isDirectory = False
+        self.color = color[self.fileType]
         return
 
     def refresh(self):
@@ -122,39 +83,39 @@ class File:
         return toCreate
 
     def getChildrenAndContent(self):
-        osWalk                  =       os.walk(self.path).next()
-        self.children           =       osWalk[1]
-        self.content            =       osWalk[2]
-        self.nbChildren         =       len(self.children)
-        self.nbContent          =       len(self.content)
+        osWalk = os.walk(self.path).next()
+        self.children = osWalk[1]
+        self.content = osWalk[2]
+        self.nbChildren =       len(self.children)
+        self.nbContent = len(self.content)
         self.children.sort()
         self.content.sort()
         for i in range(self.nbChildren):
-            self.children[i]    =       self.path + "/" + self.children[i]
+            self.children[i] = self.path + "/" + self.children[i]
         for i in range(self.nbContent):
-            self.content[i]     =       self.path + "/" + self.content[i]
+            self.content[i] = self.path + "/" + self.content[i]
         return
-#------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 class FileBox:
     def __init__(self, roots):
         global minDepthOfRoots
-        minDepthOfRoots         =       minDepth(roots)
-        self.files              =       []
-        self.nbFiles            =       0
-        self.currentDirectory   =       0
-        self.currentPath        =       roots[0][0]
+        minDepthOfRoots = minDepth(roots)
+        self.files = []
+        self.nbFiles = 0
+        self.currentDirectory = 0
+        self.currentPath = roots[0][0]
         for i in range(len(roots)):
             self.addAFile(i, roots[i][0], roots[i][1], roots[i][2])
         return
 
     def addAFile(self, n, path, alias, status = "close"):
         self.files.insert(n, File(path, alias, status, self.fileType(path)))
-        self.nbFiles            +=      1
+        self.nbFiles += 1
         return
 
     def removeAFile(self, n):
         self.files.pop(n)
-        self.nbFiles            -=      1
+        self.nbFiles -= 1
         return
 
     def fileType(self, path):
@@ -174,8 +135,8 @@ class FileBox:
         return
 
     def goto(self, n):
-        self.currentDirectory   =       n
-        self.currentPath        =       self.files[n].path
+        self.currentDirectory = n
+        self.currentPath = self.files[n].path
         if (self.files[n].status == "close"):
             self.files[n].status = "open"
             insertionPosition = n + 1
@@ -189,7 +150,7 @@ class FileBox:
         return
 
     def findChildrenAndContent(self, n):
-        toDelete                =       []
+        toDelete = []
         for i, val in enumerate(self.files):
             if (val.path.find(self.files[n].path + "/") != -1):
                 toDelete.append(i)
@@ -203,7 +164,7 @@ class FileBox:
         return -1
 
     def refresh(self):
-        toDelete                =       []
+        toDelete = []
         for i, val in enumerate(self.files):
             if (not os.path.exists(val.path)):
                 toDelete.append(i)
@@ -250,23 +211,13 @@ class FileBox:
         else:
             os.system("vim " + path)
         return
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                        PROGRAM                                                       =
-#=                                                                                                                      =
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-oldAnswer                       =       0
+#------------------------------------------------------------------------------
+#                                                                       PROGRAM
+#------------------------------------------------------------------------------
+oldAnswer = 0
 
 setTheEnvironment()
-fileBox                         =       FileBox(humanRead(rootsPath, " "))
+fileBox =  FileBox(humanRead(rootsPath, " "))
 setCommandLine()
 while (answer != "e"):
     os.system("clear")
@@ -293,12 +244,6 @@ while (answer != "e"):
         #fileBox.goto(fileBox.fileNumberByPath(os.getcwd()))
         #fileBox.goto(fileBox.fileNumberByPath(os.getcwd()))
 print os.getcwd()
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-#========================================================================================================================
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#=                                                                                                                      =
-#========================================================================================================================
+#------------------------------------------------------------------------------
+#                                                                           END
+#------------------------------------------------------------------------------
