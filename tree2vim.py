@@ -180,6 +180,7 @@ class FileBox:
         #BUILDING LIST OF THE FILES INSIDE THE TAR
         tarList = []
         tarAnswer=""
+        tarAnswer2=""
         os.system("clear")
         cmd = "tar -tvf " + path + " | sed 's/.* //'"
         cmdRslt = os.popen(cmd)
