@@ -17,7 +17,7 @@
 import os
 import tarfile
 from itertools import chain
-#------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 from aeo_inputOutput import setTheEnvironment
 from aeo_inputOutput import humanRead
 from aeo_commandLine import setCommandLine
